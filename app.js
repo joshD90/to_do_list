@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+
 const app = express();
 
 app.use(bodyParser.urlencoded({
@@ -9,21 +10,28 @@ app.use(bodyParser.urlencoded({
 
 app.use(express.static('public'));
 
+app.set('view engine', 'ejs');
+
 app.get('/', (req, res) => {
+
+
   var today = new Date();
   var currentDay = today.getDay();
+  var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  if (currentDay === 0 || currentDay === 6) {
+    var actSuggest = "It's the weekend, Chillout!!"
 
-  if (currentDay === 6 || 0) {
-    res.write("<h1>Yay it's the weekend</h1>")
   } else {
-    res.write("<h1>Boo! cant believe I have to work</h1>")
+    actSuggest = "Get Back to Work You!!"
+    console.log("weekendDay")
   }
-  if (currentDay === 3) {
-    res.write("it's Wednesday My Dudes!!!");
-  }
-  res.end();
-  console.log(today);
-  //res.sendFile(__dirname + '/index.html');
+
+  res.render('list', {
+    currentDay: daysOfWeek[currentDay],
+    activitySuggestion: actSuggest
+  });
+  console.log(currentDay);
+
 });
 
 app.listen(3000, () => {
